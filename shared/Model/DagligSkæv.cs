@@ -24,7 +24,7 @@ public class DagligSkæv : Ordination {
     public override double doegnDosis()
     {
         double totalDosis = 0;
-
+        
         foreach (var dosis in doser)
         {
             totalDosis += dosis.antal;

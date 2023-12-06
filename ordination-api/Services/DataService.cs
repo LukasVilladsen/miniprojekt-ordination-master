@@ -4,6 +4,7 @@ using System.Text.Json;
 using shared.Model;
 using static shared.Util;
 using Data;
+using Microsoft.Extensions.Logging;
 
 namespace Service;
 
@@ -21,7 +22,7 @@ public class DataService
     public void SeedData() {
 
         // Patients
-        Patient[] patients = new Patient[5];
+        Patient[] patients = new Patient[7];
         patients[0] = db.Patienter.FirstOrDefault()!;
 
         if (patients[0] == null)
@@ -133,33 +134,36 @@ public class DataService
     public List<Laegemiddel> GetLaegemidler() {
         return db.Laegemiddler.ToList();
     }
-
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato)
     {
+
         // Find patienten og lægemidlet baseret på ID'erne
-        var patient = db.Patienter.Find(patientId);
-        var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+        Patient patient = db.Patienter.Find(patientId);
+        Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId);
 
         // Tjek om patient og lægemiddel findes
         if (patient == null || laegemiddel == null)
-        {
-            // Håndter fejl, f.eks. kast en exception eller returner null
-            return null!;
-        }
+            {
 
-        // Opret en ny PN-ordination
-        var pnOrdination = new PN(startDato, slutDato, antal, laegemiddel);
+            return null;
+            }
 
-        // Manuelt tilføj patienten og lægemidlet til ordinationen
-        pnOrdination.GetType().GetProperty("Patient")?.SetValue(pnOrdination, patient);
-        pnOrdination.GetType().GetProperty("laegemiddel")?.SetValue(pnOrdination, laegemiddel);
+            // Opret en ny PN-ordination
+            var pn = new PN(startDato, slutDato, antal, laegemiddel);
 
-        // Gem ordinationen i konteksten
-        db.Ordinationer.Add(pnOrdination);
-        db.SaveChanges();
+            // Manuelt tilføj patienten og lægemidlet til ordinationen
+        
+            pn.laegemiddel = laegemiddel;
 
-        return pnOrdination;
+            // Gem ordinationen i konteksten
+            patient.ordinationer.Add(pn);
+            db.SaveChanges();
+
+            return pn;
+        
+       
     }
+
 
 
 

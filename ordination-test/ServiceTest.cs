@@ -53,4 +53,27 @@ public class ServiceTest
 
         Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
     }
+
+
+
+
+    [TestClass]
+    public class DagligFastTest
+    {
+
+        //opret et lægemiddel
+        Laegemiddel laegemiddel = new Laegemiddel("TestMiddel", 1, 1, 1, "styk");
+
+        [TestMethod]
+        public void TestDoegnDosisNormal()
+        {
+            DagligFast ordination = new DagligFast(DateTime.Now, DateTime.Now.AddDays(7), laegemiddel, -3, 0, 0, 0);
+
+            double forventetDosis = -3;
+
+            Assert.AreEqual(forventetDosis, ordination.doegnDosis());
+        }
+
+    }
 }
+

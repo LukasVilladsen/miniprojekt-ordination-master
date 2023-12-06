@@ -68,7 +68,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        patienter = await apiService.GetPatienter();        
+        patienter = await apiService.GetPatienter();
     }
 
     private void onSelectPatient(PatientResponse p) {
@@ -119,13 +119,28 @@
         }
     }
 
-    private void ClickOpret() {
-        if (type == OrdinationType.PN) {
-            PageState = State.OpretPN;
-        } else if (type == OrdinationType.DagligFast) {
-            PageState = State.OpretFast;
-        } else if (type == OrdinationType.DagligSkaev) {
-            PageState = State.OpretSkaev;
+    private void ClickOpret()
+    {
+        // Check if patient, medication, and ordination type are selected
+        if (patient != null && laegemiddel != null && type != null)
+        {
+            if (type == OrdinationType.PN)
+            {
+                PageState = State.OpretPN;
+            }
+            else if (type == OrdinationType.DagligFast)
+            {
+                PageState = State.OpretFast;
+            }
+            else if (type == OrdinationType.DagligSkaev)
+            {
+                PageState = State.OpretSkaev;
+            }
+        }
+        else
+        {
+            // Throw an exception if not all required fields are selected
+            throw new InvalidOperationException("Vælg venligst patient, lægemiddel og ordinationstype før oprettelse.");
         }
     }
 }
