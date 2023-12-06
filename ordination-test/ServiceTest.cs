@@ -26,7 +26,9 @@ public class ServiceTest
     {
         Assert.IsNotNull(service.GetPatienter());
     }
-
+    //opret daglig fast ordination
+    //tester oprettelse af daglig ordination, og hvor mange der så er 
+   
     [TestMethod]
     public void OpretDagligFast()
     {
@@ -36,32 +38,28 @@ public class ServiceTest
         Assert.AreEqual(1, service.GetDagligFaste().Count());
 
         service.OpretDagligFast(patient.PatientId, lm.LaegemiddelId,
-            2, 2, 1, 0, DateTime.Now, DateTime.Now.AddDays(3));
+            -2, 2, 1, 0, DateTime.Now, DateTime.Now.AddDays(3));
+        service.OpretDagligFast(patient.PatientId, lm.LaegemiddelId,
+            0, 3, 7, 1, DateTime.Now, DateTime.Now.AddDays(3));
 
-        Assert.AreEqual(2, service.GetDagligFaste().Count());
+        Assert.AreEqual(3, service.GetDagligFaste().Count());
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestAtKodenSmiderEnException()
     {
-        // Herunder skal man så kalde noget kode,
-        // der smider en exception.
-
-        // Hvis koden _ikke_ smider en exception,
-        // så fejler testen.
-
+        throw new ArgumentNullException();
         Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
+        
     }
 
-
-
-
-    [TestClass]
+   //test case total dosis
+   //skal tjekke om total dosis er rigtig
     public class DagligFastTest
     {
 
-        //opret et lægemiddel
+        
         Laegemiddel laegemiddel = new Laegemiddel("TestMiddel", 1, 1, 1, "styk");
 
         [TestMethod]
@@ -74,6 +72,8 @@ public class ServiceTest
             Assert.AreEqual(forventetDosis, ordination.doegnDosis());
         }
 
+   
     }
+
 }
 
